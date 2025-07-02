@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+  name: ic-webapp
+  labels:
+    env: prod
+    app: ic-webapp
+  namespace: ic-webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ic-webapp
+  template:
+    metadata:
+      labels:
+        app: ic-webapp
+    spec:
+      containers:
+      - image: tafita/ic-webapp:v1.0
+        name: ic-webapp
+        env:
+        - name: ODOO_URL
+          value: http://192.168.20.131:30069/
+          name: PGADMIN_URL
+          value: http://192.168.20.131:30050/
+        ports:
+        - containerPort: 8080
+          name: ic-webapp

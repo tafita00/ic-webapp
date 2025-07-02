@@ -1,0 +1,17 @@
+apiVerison: v1
+kind: Service
+metadata:
+  name: odoo
+  lables:
+    env: prod
+    app: odoo
+  namespace: ic-webapp
+spec:
+  type: NodePort
+  selector:
+    app: odoo
+  ports:
+    - protocol: TCP
+      port: 8069
+      targetPort: 8068
+      nodePort: 30069

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadate:
+  labels:
+    app: odoo
+    env: prod
+  namespace: ic-webapp
+  name: pgadmin-pv
+sepec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data_k8ss/pgadmin4"
