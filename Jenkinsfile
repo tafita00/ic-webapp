@@ -44,7 +44,7 @@ pipeline{
                 }
             }
         }
-        stage{
+        stage('Test container'){
             agent any
             steps{
                 script{
