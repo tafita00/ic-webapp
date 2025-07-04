@@ -1,6 +1,6 @@
 pipeline {
     tools{
-        nodejs = 'NodeJs'
+        nodejs  'NodeJs'
     }
     environment{
         SCANNER_HOME=tool 'sonar-scanner'
