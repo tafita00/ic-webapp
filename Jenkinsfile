@@ -1,7 +1,4 @@
 pipeline {
-    tools{
-        nodejs  'NodeJs'
-    }
     environment{
         SCANNER_HOME=tool 'sonar-scanner'
     }
@@ -19,7 +16,7 @@ pipeline {
                 script{
                     withSonarQubeEnv('sonar-server') {
                         sh '''
-                            $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=uptime -Dsonar.projectKey=uptime
+                            $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=wanderlust -Dsonar.projectKey=wanderlust
                         '''
                     }  
                 }
