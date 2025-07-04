@@ -3,6 +3,7 @@ pipeline {
         IMAGE_NAME = "ic-webapp"
         APP_CONTAINER_PORT = "8080"
         DOCKERHUB_ID = "choco1992"
+        DOCKERHUB_PASSWORD = credentials('dockerhub_password')
         SCANNER_HOME=tool 'sonar-scanner'
     }
     agent none
@@ -20,7 +21,7 @@ pipeline {
                     withSonarQubeEnv('sonar-server') {
                         sh '''
                             $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=uptime -Dsonar.projectKey=uptime
-                        '''    
+                        '''
                     }  
                 }
             }
@@ -48,9 +49,7 @@ pipeline {
             agent any 
             steps {
                 script{
-                    sh '''
-                        trivy fs --format table -o trivy-fs-report.html .
-                    '''    
+                    sh 'trivy fs --format table -o trivy-fs-report.html .'
                 }
             }
         }
@@ -93,6 +92,17 @@ pipeline {
                sh '''
                    docker stop $IMAGE_NAME
                    docker rm $IMAGE_NAME
+               '''
+             }
+          }
+        }
+       stage ('Login and Push Image on docker hub') {
+          agent any
+          steps {
+             script {
+               sh '''
+                   echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_ID --password-stdin
+                   docker push ${DOCKERHUB_ID}/$IMAGE_NAME:$IMAGE_TAG
                '''
              }
           }
