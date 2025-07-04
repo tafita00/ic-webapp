@@ -10,8 +10,7 @@ pipeline {
               git url: 'https://github.com/tafita00/ic-webapp.git', branch: 'main'   
            } 
        }
-    } 
-    stage("Sonarqube Analysis "){
+        stage("Sonarqube Analysis "){
             agent any 
             steps{
                 script{
@@ -23,4 +22,6 @@ pipeline {
                 }
             }
         }
+        
+    }  
 }
