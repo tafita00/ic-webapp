@@ -11,7 +11,7 @@ pipeline {
        stage('Clone code from GitHub'){
            agent any 
            steps{
-              git url: '', branch: 'main'   
+              git url: 'https://github.com/tafita00/ic-webapp.git', branch: 'main'   
            } 
        }
        stage("Sonarqube Analysis "){
