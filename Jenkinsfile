@@ -8,14 +8,12 @@ pipeline {
     }
     agent none
     stages { 
-       stage('Clone code from GitHub'){
-           agent any 
+       stage('Clone code from GitHub'){ 
            steps{
               git url: 'https://github.com/tafita00/ic-webapp.git', branch: 'main'   
            } 
        }
        stage("Sonarqube Analysis "){
-            agent any 
             steps{
                 script{
                     withSonarQubeEnv('sonar-server') {
@@ -27,7 +25,6 @@ pipeline {
             }
         }
         stage("quality gate"){
-           agent any 
            steps {
                 script {
                     timeout(time: 2, unit: "MINNUTES"){
@@ -37,7 +34,6 @@ pipeline {
             } 
         }
         stage('OWASP FS SCAN') {
-            agent any 
             steps {
                 script{
                     dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
@@ -45,8 +41,7 @@ pipeline {
                 }
             }
         }
-        stage('TRIVY FS SCAN') {
-            agent any 
+        stage('TRIVY FS SCAN'){
             steps {
                 script{
                     sh 'trivy fs --format table -o trivy-fs-report.html .'
