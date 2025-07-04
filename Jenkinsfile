@@ -19,7 +19,9 @@ pipeline {
             steps{
                 script{
                     withSonarQubeEnv('sonar-server') {
-                        sh $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=uptime -Dsonar.projectKey=uptime
+                        sh '''
+                            $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=uptime -Dsonar.projectKey=uptime
+                        '''    
                     }  
                 }
             }
@@ -47,7 +49,9 @@ pipeline {
             agent any 
             steps {
                 script{
-                    sh "trivy fs --format table -o trivy-fs-report.html ."
+                    sh '''
+                        trivy fs --format table -o trivy-fs-report.html .
+                    '''    
                 }
             }
         }
