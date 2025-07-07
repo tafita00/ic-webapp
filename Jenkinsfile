@@ -94,7 +94,6 @@ pipeline {
         }
        stage('Deployment kubernetes'){
           steps {
-             stage('Deployment ic-webapp'){
                 script {
                     sh '''
                     kubectl apply -f ./sources/manifestes-k8s/ic-webapp
@@ -107,8 +106,6 @@ pipeline {
                     '''
                 }
              }  
-           
-          }
        }
         
     }
