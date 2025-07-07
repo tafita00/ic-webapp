@@ -96,6 +96,7 @@ pipeline {
           steps {
                 script {
                     sh '''
+                    minikube start
                     kubectl apply -f ./sources/manifestes-k8s/ic-webapp
                     curl -I http://{HOST_IP}:30080 | grep -i "200"
                     kubectl apply -f ./sources/manifestes-k8s/postgres
