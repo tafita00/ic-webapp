@@ -99,32 +99,15 @@ pipeline {
                     sh '''
                     kubectl apply -f ./sources/manifestes-k8s/ic-webapp
                     curl -I http://{HOST_IP}:30080 | grep -i "200"
-                    '''
-                }
-             }
-             stage('Deployment postgres'){
-                script {
-                    sh '''
                     kubectl apply -f ./sources/manifestes-k8s/postgres
-                    '''
-                }
-             }
-             stage('Deployment odoo'){
-                script {
-                    sh '''
                     kubectl apply -f ./sources/manifestes-k8s/odoo
                     curl -I http://{HOST_IP}:30069 | grep -i "200"
-                    '''
-                }
-             }
-             stage('Deployment pgadmin'){
-                script {
-                    sh '''
                     kubectl apply -f ./sources/manifestes-k8s/pgadmin
-                    curl -I http://{HOST_IP}:30050 | grep -i "200"s
+                    curl -I http://{HOST_IP}:30050 | grep -i "200"
                     '''
                 }
-             }
+             }  
+           
           }
        }
         
