@@ -18,7 +18,7 @@ pipeline {
                 script{
                     withSonarQubeEnv('sonar-server') {
                         sh '''
-                            $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=wanderlust -Dsonar.projectKey=wanderlust
+                            $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=ic-webapp -Dsonar.projectKey=ic-webapp
                         '''
                     }  
                 }
@@ -27,7 +27,7 @@ pipeline {
         stage("quality gate"){ 
            steps {
                 script {
-                    timeout(time: 2, unit: "MINUTES"){
+                    timeout(time: 2, unit: "MINNUTES"){
                         waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token' 
                     }
                 }
@@ -68,6 +68,11 @@ pipeline {
              }
           }
        }
+       stage("TRIVY IMAGE"){
+            steps{
+                sh 'trivy image ${DOCKERHUB_ID}/$IMAGE_NAME:$IMAGE_TAG > trivyimage.txt'
+            }
+        }
        stage('Test image') {
            steps {
               script {
@@ -77,17 +82,6 @@ pipeline {
               }
            }
        }
-       stage('Clean container') {
-          steps {
-             script {
-               sh '''
-                   docker stop $IMAGE_NAME
-                   docker rm $IMAGE_NAME
-               '''
-             }
-          }
-        }
-
        stage ('Login and Push Image on docker hub') {
           steps {
              script {
@@ -98,6 +92,43 @@ pipeline {
              }
           }
         }
-
+       stage('Deployment kubernetes'){
+          steps {
+             stage('Deployment ic-webapp'){
+                script {
+                    sh '''
+                    kubectl apply -f ./sources/manifestes-k8s/ic-webapp
+                    curl -I http://{HOST_IP}:30080 | grep -i "200"
+                    '''
+                }
+             }
+             stage('Deployment postgres'){
+                script {
+                    sh '''
+                    kubectl apply -f ./sources/manifestes-k8s/postgres
+                    '''
+                }
+             }
+             stage('Deployment odoo'){
+                script {
+                    sh '''
+                    kubectl apply -f ./sources/manifestes-k8s/odoo
+                    curl -I http://{HOST_IP}:30069 | grep -i "200"
+                    '''
+                }
+             }
+             stage('Deployment pgadmin'){
+                script {
+                    sh '''
+                    kubectl apply -f ./sources/manifestes-k8s/pgadmin
+                    curl -I http://{HOST_IP}:30050 | grep -i "200"s
+                    '''
+                }
+             }
+          }
+       }
+        
     }
 }
+
+
